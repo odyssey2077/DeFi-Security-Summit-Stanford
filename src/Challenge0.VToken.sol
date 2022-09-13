@@ -5,6 +5,7 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract VToken is ERC20 {
     // Test
+    
     // Decimals are set to 18 by default in `ERC20`
     constructor() ERC20("VToken", "VTLK") {
       address vitalik = 0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045;   
